@@ -20,6 +20,8 @@ export OS_REGION_NAME="Melbourne"
 export OS_INTERFACE="public"
 export OS_IDENTITY_API_VERSION=3
 
+export DOCKER_REGISTRY=lmorandini
+
 # VM image and flavour (the depend on the OpenStack cloud you are deployong on)
 export SERVER_IMAGE="e574cad1-b653-4166-9ece-7596d2d66d35"
 export SERVER_FLAVOR="m2.small"

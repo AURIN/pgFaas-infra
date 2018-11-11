@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export POSTGRES_PASSWORD="towoo6eesheiShai1IoquuQu9Gei4ahb"
+
 # OpenFaas credentials
 #export OPENFAAS_AUTH="admin:1878c0e86df0cbeed917720d589392a5e650c1bf947880558c6593718c051139"
 

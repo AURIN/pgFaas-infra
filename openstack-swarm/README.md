@@ -93,6 +93,7 @@ Deplopyment of a Docker container with PostgreSQL/PostGIS, and loading of OpenSt
 ### pgFaas API
 
 ```bash
+ ./scripts/pull-images.sh
  ./scripts/install-pgfaas-api.sh
 ```
 
@@ -122,7 +123,14 @@ TODO: after every re-deployment of the pgFaas API, the NginX service has to be r
   docker service update --force nginx
 ```
 
+## Deployment of sample functions
 
+# TODO with cURL  
+
+
+## Cluster maintenance
+
+# TODO logs and stuff
 
 
 ## De-commissioning

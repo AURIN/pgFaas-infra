@@ -4,7 +4,6 @@ source ./scripts/get-ips.sh
 ./scripts/cmd.sh master\
   "\
     set -x;\
-    docker pull lmorandini/pgfaas-api:${PGFAAS_VERSION};\
     docker service update func_gateway --publish-rm ${PGFAAS_PORT};\
     docker service rm pgfaas-api;\
     docker service create --network=func_functions\
@@ -16,7 +15,7 @@ source ./scripts/get-ips.sh
       --env OPENFAAS_AUTH=''\
       --env PGFAAS_LOGLEVEL=debug\
       --env PGFAAS_PORT=${PGFAAS_PORT}\
-      --env PGFAAS_IMAGE='lmorandini/pgfaas-api:${PGFAAS_NODE_VERSION}'\
+      --env PGFAAS_IMAGE='lmorandini/pgfaas-node:${PGFAAS_NODE_VERSION}'\
       --env PGHOST=${PGHOST}\
       --env PGPORT=${PGPORT}\
       --env PGDATABASE=postgres\
