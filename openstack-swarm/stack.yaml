@@ -1,0 +1,217 @@
+---
+  heat_template_version: "pike"
+  description: "Simple template to deploy a Docker Swarm cluster for pgFaas"
+
+  parameters:
+    key_name:
+      type: string
+    image:
+      type: string
+    flavor:
+      type: string
+    externalNetwork:
+      type: string
+    subnetCidr:
+      type: string
+      default: "10.0.2.0/24"
+    dbHost:
+      type: string
+      default: "dbserver"
+    subnetMasterIP:
+      type: string
+      default: "10.0.2.1"
+    subnetPoolStart:
+      type: string
+      default: "10.0.2.16"
+    subnetPoolEnd:
+      type: string
+      default: "10.0.2.64"
+    nameServers:
+      type: comma_delimited_list
+      default: ["8.8.8.8"]
+    workersCount:
+      type: number
+      label: workersCount
+      description: Number of Swarm workers
+      default: 3
+    dbFileSystem:
+      type: string
+      label: dbFileSystem
+      default: "/mnt/dbvolume"
+    dbVolumeSize:
+      type: number
+      label: dbVolumeSize
+      description: GeoServer volume size in GBs
+      default: 100
+    dbVolumeAZ:
+      type: string
+      label: dbVolumeAZ
+      default: "Melbourne"
+    faasPort:
+      type: number
+      default: 8080
+    dbPort:
+      type: number
+      default: 5432
+    user:
+      type: string
+      default: "ubuntu"
+
+  resources:
+    faas_master:
+      type: "OS::Nova::Server"
+      properties:
+        key_name: {get_param: key_name}
+        image: {get_param: image}
+        flavor: {get_param: flavor}
+        networks:
+          - port: {get_resource: "swarm_master_port"}
+        user_data:
+          str_replace:
+            params:
+              $dbFileSystem: {get_param: dbFileSystem}
+              $subnetCidr: {get_param: subnetCidr}
+              $user: {get_param: user}
+            template: |
+              #!/bin/bash
+              apt-get update
+              apt-get -y install curl net-tools nfs-kernel-server git
+              chsh -s /bin/bash ubuntu
+              usermod -aG docker $user
+              systemctl restart docker
+              mke2fs -t ext4 /dev/vdb
+              mkdir $dbFileSystem
+              mount /dev/vdb $dbFileSystem
+              chmod 777 -R $dbFileSystem
+              echo """$dbFileSystem    $subnetCidr(rw,sync,no_root_squash,no_all_squash)""" > /etc/exports
+              systemctl restart nfs-kernel-server
+              exportfs -a
+
+    faas_worker:
+      type: "OS::Heat::ResourceGroup"
+      properties:
+        count: {get_param: workersCount}
+        resource_def:
+          type: "OS::Nova::Server"
+          properties:
+            key_name: {get_param: key_name}
+            image: {get_param: image}
+            flavor: {get_param: flavor}
+            networks:
+              - network: {get_resource: "swarm_network"}
+                subnet: {get_resource: "swarm_subnet"}
+
+            security_groups:
+              - "default"
+              - {get_resource: "swarm_securitygroup"}
+            user_data:
+              str_replace:
+                params:
+                  $dbFileSystem: {get_param: dbFileSystem}
+                  $PRIVATE_MASTER_IP: {get_attr: [swarm_master_port, fixed_ips, 0, ip_address]}
+                  $user: {get_param: user}
+                template: |
+                  #!/bin/bash
+                  apt-get update
+                  apt-get -y install curl net-tools nfs-common
+                  chsh -s /bin/bash ubuntu
+                  usermod -aG docker $user
+                  systemctl restart docker
+
+    dbserver:
+      type: "OS::Nova::Server"
+      properties:
+        name: {get_param: dbHost}
+        key_name: {get_param: key_name}
+        image: {get_param: image}
+        flavor: {get_param: flavor}
+        networks:
+          - port: {get_resource: "db_port"}
+        user_data:
+          str_replace:
+            params:
+              $dbFileSystem: {get_param: dbFileSystem}
+              $PRIVATE_MASTER_IP: {get_attr: [swarm_master_port, fixed_ips, 0, ip_address]}
+              $user: {get_param: user}
+            template: |
+              #!/bin/bash
+              apt-get update
+              apt-get -y install bzip2 osm2pgsql curl net-tools nfs-common
+              chsh -s /bin/bash ubuntu
+              usermod -aG docker $user
+              systemctl restart docker
+
+    swarm_network:
+      type: "OS::Neutron::Net"
+    swarm_subnet:
+      type: "OS::Neutron::Subnet"
+      properties:
+        network: {get_resource: "swarm_network"}
+        dns_nameservers: {get_param: nameServers}
+        cidr: {get_param: subnetCidr}
+        gateway_ip: {get_param: subnetMasterIP}
+        allocation_pools:
+            - start: {get_param: subnetPoolStart}
+              end: {get_param: subnetPoolEnd}
+    swarm_router:
+      type: "OS::Neutron::Router"
+      properties:
+        external_gateway_info:
+          network: {get_param: externalNetwork}
+    swarm_router_interface:
+      type: "OS::Neutron::RouterInterface"
+      properties:
+        router_id:
+          get_resource: "swarm_router"
+        subnet_id:
+          get_resource: "swarm_subnet"
+    docker_floating_ip:
+      type: "OS::Neutron::FloatingIP"
+      depends_on: "swarm_router_interface"
+      properties:
+        floating_network_id: "melbourne"
+        port_id: {get_resource: "swarm_master_port"}
+
+    swarm_master_port:
+      type: "OS::Neutron::Port"
+      properties:
+        network_id: {get_resource: "swarm_network"}
+        security_groups:
+          - "default"
+          - {get_resource: "swarm_securitygroup"}
+    db_port:
+      type: OS::Neutron::Port
+      properties:
+        network_id: {get_resource: "swarm_network"}
+        security_groups:
+          - "default"
+          - {get_resource: "swarm_securitygroup"}
+    swarm_securitygroup:
+      type: "OS::Neutron::SecurityGroup"
+      properties:
+        rules:
+          - remote_ip_prefix: {get_param: subnetCidr}
+            protocol: "icmp"
+          - remote_ip_prefix: {get_param: subnetCidr}
+            protocol: "tcp"
+            port_range_min: 1
+            port_range_max: 65535
+          - remote_ip_prefix: {get_param: subnetCidr}
+            protocol: "udp"
+            port_range_min: 1
+            port_range_max: 65535
+          - remote_ip_prefix: "0.0.0.0/0"
+            protocol: "tcp"
+            port_range_min: 80
+            port_range_max: 80
+
+    dbvolume:
+      type: OS::Cinder::Volume
+      properties:
+        size: {get_param: dbVolumeSize}
+        availability_zone: {get_param: dbVolumeAZ}
+    dbvolume_attach_dbserver:
+      type: OS::Cinder::VolumeAttachment
+      properties:
+        volume_id: {get_resource: dbvolume}
+        instance_uuid: {get_resource: faas_master}

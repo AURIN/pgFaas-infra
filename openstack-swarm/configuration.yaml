@@ -1,0 +1,13 @@
+parameters:
+  image: ${SERVER_IMAGE}
+  flavor: ${SERVER_FLAVOR}
+  workersCount: ${WORKERS_COUNT}
+  key_name: ${KEY_NAME}
+  dbHost: "${PGHOST}"
+  dbVolumeSize: ${DB_VOLUME_SIZE}
+  dbFileSystem: ${DB_FILESYSTEM}
+  dbVolumeAZ: ${DB_VOLUME_AZ}
+  dbPort: ${PGPORT}
+  faasPort: ${FAAS_PORT}
+  user: ${USER}
+  externalNetwork: ${EXTERNAL_NETWORK}
