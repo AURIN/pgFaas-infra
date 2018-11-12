@@ -1,0 +1,22 @@
+{
+  "name": "sample-library",
+  "version": "0.1.0-SNAPSHOT",
+  "description": "pgFaas sample functions library",
+  "key-words": [],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.11.0 <8.12.0",
+    "npm": ">=5.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AURIN/pgFaas-infra"
+  },
+  "dependencies": {
+    "underscore": "^1.9.1"
+  },
+  "scripts": {
+    "deploy": "mocha --no-colors --timeout 60000 test/deployment"
+  }
+}
