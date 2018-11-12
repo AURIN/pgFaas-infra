@@ -123,15 +123,6 @@ TODO: after every re-deployment of the pgFaas API, the NginX service has to be r
   docker service update --force nginx
 ```
 
-## Deployment of sample functions
-
-# TODO with cURL  
-
-
-## Cluster maintenance
-
-# TODO logs and stuff
-
 
 ## De-commissioning
 
