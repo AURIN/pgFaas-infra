@@ -30,7 +30,7 @@ set in the `PGFAAS_URL` environment variable.
 ./scripts/load-function.sh osm
 ```
 ```bash
-./scripts/test-function.sh osm '{"verb":"knnbusstops","k":10,"x":18528319,"y":-2544029}'
+./scripts/test-function.sh osm '{"verb":"knnbusstops","k":10,"x":166.646898376803,"y":-22.2855301970543}'
 ```
 
 

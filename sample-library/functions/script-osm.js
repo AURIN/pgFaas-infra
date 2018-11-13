@@ -34,8 +34,8 @@ module.exports = {
   },
   knnbusstops: (sqlexec, req, callback) => {
     sqlexec.query(
-      `SELECT ST_ASGeoJSON(way) AS geom, name, osm_id AS id, operator,
-         ST_Distance(way, ST_SetSRID(ST_MakePoint($2, $3), 3857)) AS distance
+      `SELECT ST_ASGeoJSON(ST_Transform(way, 4326)) AS geom, name, osm_id AS id, operator,
+         ST_Distance(ST_Transform(way, 4326), ST_SetSRID(ST_MakePoint($2, $3), 4326)) AS distance
          FROM planet_osm_point
          WHERE highway = 'bus_stop'
          ORDER BY distance LIMIT $1`,
