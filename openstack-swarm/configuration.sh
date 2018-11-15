@@ -11,7 +11,7 @@ export PGFAAS_VERSION="latest"
 export FAAS_PORT=8080
 export PGFAAS_PORT=3010
 export PGFAASUI_VERSION="latest"
-export PGFAASUI_PORT=8071
+export PGFAASUI_PORT=3020
 
 # OpenStack tenancy parameters
 export OS_PROJECT_NAME="BigTwitter"

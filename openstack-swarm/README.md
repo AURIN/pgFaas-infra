@@ -90,12 +90,19 @@ Deplopyment of a Docker container with PostgreSQL/PostGIS, and loading of OpenSt
 ```
 
 
-### pgFaas API
+### Download all pgFaas images
 
 ```bash
  ./scripts/pull-images.sh
+```
+
+
+### pgFaas API
+
+```bash
  ./scripts/install-pgfaas-api.sh
 ```
+
 
 ### pgFaas UI
 
