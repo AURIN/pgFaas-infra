@@ -106,7 +106,6 @@ Deplopyment of a Docker container with PostgreSQL/PostGIS, and loading of OpenSt
 
 ### pgFaas UI
 
-TODO
 ```bash
  ./scripts/install-pgfaas-ui.sh
 ```
@@ -128,6 +127,19 @@ TODO: after every re-deployment of the pgFaas API, the NginX service has to be r
  on the master node with: 
 ```bash
   docker service update --force nginx
+```
+
+
+## Direct connection to the database 
+
+This could be useful in connection with pgAdmin (point it to `localhost:5433`)
+```bash
+ ./scripts/create-pg-tunnel.sh
+```
+
+To remove the SSH tunnel:
+```bash
+ ./scripts/remove-pg-tunnel.sh
 ```
 
 

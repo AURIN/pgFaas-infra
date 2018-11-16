@@ -136,7 +136,7 @@
             template: |
               #!/bin/bash
               apt-get update
-              apt-get -y install bzip2 osm2pgsql curl net-tools nfs-common
+              apt-get -y install bzip2 curl net-tools nfs-common
               chsh -s /bin/bash ubuntu
               usermod -aG docker $user
               systemctl restart docker
