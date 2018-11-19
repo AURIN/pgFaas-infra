@@ -33,7 +33,7 @@ print("The sum of {} and {} is {}".format(par[0], par[1], out["c"]))
 # Displays on a map the 5 closest bus stops on a location in New Caledonia
 # Requirements: folium (pip install folium)
 #
-import folium
+import folium, requests, json
 loc= [-22.25, 166.65]
 m = folium.Map(
     location=loc,
@@ -63,8 +63,9 @@ m
 # Computes the shortest path between two nodes
 # Requirements: folium (pip install folium)
 #
-import requests, json, random
+import folium, requests, json, random
 
+loc= [-22.25, 166.65]
 c= ['green','red','yellow', 'blue', 'cyan']
 
 m = folium.Map(
