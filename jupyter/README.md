@@ -60,7 +60,7 @@ m
 * Copy and execute the following fragment in a cell:
 ```python
 # 
-# Computes the shortest path between two nodes repeatedly
+# Computes the shortest path between two nodes
 # Requirements: folium (pip install folium)
 #
 import requests, json, random
@@ -73,7 +73,7 @@ m = folium.Map(
     zoom_start=9)
 jj= json.loads('{"type":"FeatureCollection", "features":[]}')
 
-for i in range(1, 10):
+for i in range(1, 6):
    r = requests.post("http://sandbox.pgfaas.aurin.org.au//api/function/namespaces/sample/osm", 
          data=json.dumps({"verb":"shortestpath","start":random.randint(1,2000),"end":random.randint(1,2000)}), 
          headers={"Content-Type":"application/json"})
@@ -85,7 +85,7 @@ for i in range(1, 10):
  
 folium.GeoJson(    
    json.dumps(jj), 
-   name='geojson'+ str(i),
+   name='geojson',
    style_function= lambda f :{'color':f['color']}
 ).add_to(m)
 m
