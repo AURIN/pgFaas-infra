@@ -9,3 +9,4 @@ Every recipe is contained in a sub-directory, please refer to the README in the 
 
 * `openstack-swarm`: Deployment on OpenStack and Docker Swarm. This recipe details the steps to install pgFaas on OpenStack VMs and Docker Swarm cluster.
 * `sample-library`: Deployment of a sample library of functions on a running pgFaas/PostgreSQL instance.
+* `jupyter`: Notebooks source code to use pgFaaas from Jupyter.

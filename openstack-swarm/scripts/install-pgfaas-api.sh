@@ -9,6 +9,7 @@ source ./scripts/get-ips.sh
     docker service create --network=func_functions\
       --publish ${PGFAAS_PORT}:${PGFAAS_PORT}\
       --with-registry-auth\
+      --replicas ${PGFAASAPI_REPLICAS}\
       --name pgfaas-api\
       --env NODE_ENV=production\
       --env OPENFAAS_URL='http://${PRIVATE_MASTER_IP}:${FAAS_PORT}'\

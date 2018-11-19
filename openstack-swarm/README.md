@@ -118,7 +118,7 @@ Copy the configuration file to the master after having substituted ebnv variable
  ./scripts/set-service-configs.sh
 ```
 
-It installs NginX with two HTTP endpotins: `/api` and `/ui`
+It installs NginX with two HTTP endpoitns: `/api` and `/ui`
 ```bash
  ./scripts/install-nginx.sh
 ```

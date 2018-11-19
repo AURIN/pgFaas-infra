@@ -7,12 +7,17 @@ export STACK_NAME=pgfs
 # pgFaas base image
 export PGFAAS_NODE_VERSION="latest"
 
-# pgFaaas API version
+# pgFaaas API general configuration
 export PGFAAS_VERSION="latest"
 export FAAS_PORT=8080
 export PGFAAS_PORT=3010
 export PGFAASUI_VERSION="latest"
 export PGFAASUI_PORT=3020
+export PGFAASAPI_REPLICAS=3
+
+# Timeout in seconds (it should be the longest expected wait for a
+# funciton to complete)
+export PROXY_TIMEOUT=300
 
 # phFaas API URL\
 export PGFAAS_API_URL="http://sandbox.pgfaas.aurin.org.au/api"

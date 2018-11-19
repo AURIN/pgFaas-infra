@@ -2,7 +2,7 @@
 source ./configuration.sh; source secrets.sh;\
 source ./scripts/get-ips.sh
 set -x
-cat gateway.nginx | envsubst '${PRIVATE_MASTER_IP} ${PGFAASUI_PORT} ${PGFAAS_PORT}' > /tmp/gateway.nginx
+cat gateway.nginx | envsubst '${PRIVATE_MASTER_IP} ${PGFAASUI_PORT} ${PGFAAS_PORT} ${PROXY_TIMEOUT}' > /tmp/gateway.nginx
 scp /tmp/gateway.nginx ${USER}@${MASTER_IP}:/tmp
 ./scripts/cmd.sh master\
   "\
