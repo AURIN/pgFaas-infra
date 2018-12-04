@@ -74,6 +74,7 @@ Creation of a Docker swarm on the stack (OpenFaas runs on this swarm):
 Both OpenFaas and pgFaas are deployed on the Docker swarm, while PostgreSQL is
 hosted on a differen node.
 
+
 ### OpenFaas
 
 NOTE: OpenFaas is deployed with no authorization in place.
