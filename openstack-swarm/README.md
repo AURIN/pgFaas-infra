@@ -124,10 +124,10 @@ It installs NginX with two HTTP endpoitns: `/api` and `/ui`
  ./scripts/install-nginx.sh
 ```
 
-TODO: after every re-deployment of the pgFaas API, the NginX service has to be restarted
+TODO: after every re-deployment of the pgFaas API or UI, the NginX service has to be restarted
  on the master node with: 
 ```bash
-  docker service update --force nginx
+ ./scripts/update-nginx.sh
 ```
 
 
